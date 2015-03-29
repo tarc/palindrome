@@ -65,21 +65,22 @@ unsigned int min_pal( const char* str, size_t size )
       else
       {
         minima [x][y] = x - y + 1; //maximum
-#if 0
+
         for ( i = 0  ;  i < (x - y)  ;  ++ i )
         {
-          tmp_min = minima [x] [x + i]  +  minima [x - i] [y];
+          tmp_min = minima [y + i] [y]  +  minima [x] [y + i + 1];
           if ( tmp_min < minima [x] [y] )
           {
             minima [x] [y] = tmp_min;
           }
         }
-#endif
       }
     }
   }
 
+#if 0
   pp_mat ( str, minima , size );
+#endif
   return minima [size - 1][0];
 }
 
