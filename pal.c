@@ -23,9 +23,21 @@ unsigned char is_pal ( const char* str, unsigned int end, unsigned int begin)
   return 1;
 }
 
-void pp_mat ( unsigned int mat[][N], size_t size )
+void pp_mat ( const char* str, unsigned int mat[][N], size_t size )
 {
   unsigned int x, y;
+  for ( x = 0  ;  x < size  ;  ++ x )
+  {
+    printf ( "%c " , str [x] );
+  }
+  puts ("");
+
+  for ( x = 0  ;  x < size  ;  ++ x )
+  {
+    printf ( "--" );
+  }
+  puts ("");
+
   for ( y = 0  ;  y < size  ;  ++ y )
   {
     for ( x = 0  ;  x < size  ;  ++ x )
@@ -53,6 +65,7 @@ unsigned int min_pal( const char* str, size_t size )
       else
       {
         minima [x][y] = x - y + 1; //maximum
+#if 0
         for ( i = 0  ;  i < (x - y)  ;  ++ i )
         {
           tmp_min = minima [x] [x + i]  +  minima [x - i] [y];
@@ -61,11 +74,12 @@ unsigned int min_pal( const char* str, size_t size )
             minima [x] [y] = tmp_min;
           }
         }
+#endif
       }
     }
   }
 
-  pp_mat ( minima , size );
+  pp_mat ( str, minima , size );
   return minima [size - 1][0];
 }
 
