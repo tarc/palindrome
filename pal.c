@@ -85,24 +85,31 @@ unsigned int min_pal( const char* str, size_t size )
 
 int main()
 {
-  int n, test_num = 1, overflow = 0, key;
+  int n, test_num = 1;
   char line[N + 2];
+#if 0
+  int overflow = 0, key;
+#endif
 
   fgets( line, N + 2, stdin );
 
   // limits n to N
   while ((  n =  atoi(line) >= N  ?  N  :  atoi(line)  ))
   {
+#if 0
     if ( line[strlen(line) - 1] != '\n' )
     {
       overflow = 1;
     }
+#endif
 
     fgets( line, N + 2, stdin );
 
+#if 0
     while ( overflow && ( key = getc ( stdin ) ) != EOF && key != '\n' );
     
     overflow = 0;
+#endif
 
     printf( "Teste %d\n", test_num++ );
     printf( "%d\n", min_pal(line, n) );
