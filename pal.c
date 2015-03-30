@@ -57,7 +57,6 @@ unsigned int min_pal( const char* str, size_t size )
     for ( y = 0  ;  y < (size - diagonal)  ;  ++ y )
     {
       x = diagonal + y;
-      assert ( y <= x );
       if ( is_pal ( str, x, y ) )
       {
         minima [x][y] = 1;
@@ -86,20 +85,29 @@ unsigned int min_pal( const char* str, size_t size )
 
 int main()
 {
-  int n, test_num = 1;
+  int n, test_num = 1, overflow = 0, key;
   char line[N + 2];
 
-  fgets( line, lN + 2, stdin );
+  fgets( line, N + 2, stdin );
 
-  while (( n = atoi(line) ))
+  // limits n to N
+  while ((  n =  atoi(line) >= N  ?  N  :  atoi(line)  ))
   {
-    fgets( line, n+2, stdin );
+    if ( line[strlen(line) - 1] != '\n' )
+    {
+      overflow = 1;
+    }
 
-    printf( "Teste %d\n", test_num );
+    fgets( line, N + 2, stdin );
+
+    while ( overflow && ( key = getc ( stdin ) ) != EOF && key != '\n' );
+    
+    overflow = 0;
+
+    printf( "Teste %d\n", test_num++ );
     printf( "%d\n", min_pal(line, n) );
     puts("");
 
-    test_num++;
     fgets( line, lN + 2, stdin );
   }
 
