@@ -6,11 +6,13 @@
 #define N 2000
 #define lN 4
 
-// minima [x][y] memoizes the minimum for substring beginning at y and ending
-// at x (both inclusive):
+// minima [x][y] memoizes the minimum for the substring beginning at x and
+// ending at y (both inclusive). Such requirement implies minima is upper
+// triangular - if the first index x is considered to be the row index and y
+// the column one:
 unsigned int minima[N][N] = {{0}};
 
-unsigned char is_pal ( const char* str, unsigned int end, unsigned int begin)
+unsigned char is_pal ( const char* str, unsigned int begin, unsigned int end)
 {
   for ( ; begin < end ; begin++, end--)
   {
@@ -38,9 +40,9 @@ void pp_mat ( const char* str, unsigned int mat[][N], size_t size )
   }
   puts ("");
 
-  for ( y = 0  ;  y < size  ;  ++ y )
+  for ( x = 0  ;  x < size  ;  ++ x )
   {
-    for ( x = 0  ;  x < size  ;  ++ x )
+    for ( y = 0  ;  y < size  ;  ++ y )
     {
       printf ( "%u " , mat [x] [y] );
     }
@@ -54,20 +56,20 @@ unsigned int min_pal( const char* str, size_t size )
 
   for ( diagonal = 0;  diagonal < size;  diagonal++)
   {
-    for ( y = 0  ;  y < (size - diagonal)  ;  ++ y )
+    for ( x = 0  ;  x < (size - diagonal)  ;  ++ x )
     {
-      x = diagonal + y;
+      y = diagonal + x; // from  ( y - x )  ==  diagonal
       if ( is_pal ( str, x, y ) )
       {
         minima [x][y] = 1;
       }
       else
       {
-        minima [x][y] = x - y + 1; //maximum
+        minima [x][y] = y - x + 1; // maximum (one palindrome for each letter)
 
-        for ( i = 0  ;  i < (x - y)  ;  ++ i )
+        for ( i = 0  ;  i < (y - x)  ;  ++ i )
         {
-          tmp_min = minima [y + i] [y]  +  minima [x] [y + i + 1];
+          tmp_min = minima [x] [x + i]  +  minima [x + i + 1] [y];
           if ( tmp_min < minima [x] [y] )
           {
             minima [x] [y] = tmp_min;
@@ -80,7 +82,7 @@ unsigned int min_pal( const char* str, size_t size )
 #if 0
   pp_mat ( str, minima , size );
 #endif
-  return minima [size - 1][0];
+  return minima [0] [size - 1];
 }
 
 int main()
