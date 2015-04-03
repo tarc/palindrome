@@ -29,6 +29,17 @@ unsigned int run
     unsigned int memoization_matrix [] [N]
   )
 {
+  unsigned int i, j;
+
+  // memoization matrix clean up
+  for ( i = 0 ; i < str_size ; ++ i )
+  {
+    for ( j = 0 ; j < str_size ; ++ j )
+    {
+      memoization_matrix [i] [j] = 0;
+    }
+  }
+
   return ( * strategy ) ( str, str_size, memoization_matrix );
 }
 
@@ -105,6 +116,45 @@ unsigned int botton_up_strategy( const char* str, size_t size, unsigned int memo
   return memo_matrix [0] [size - 1];
 }
 
+// Top-down implementation
+unsigned int top_down_strategy (
+    const char* str, size_t size,
+    unsigned int memo_matrix[][N]
+    )
+{
+  unsigned int suffix_start;
+
+  if ( memo_matrix [0] [size - 1] != 0 )
+  {
+    return memo_matrix [0] [size - 1];
+  }
+
+  if ( is_pal ( str, 0, size - 1 ) )
+  {
+    memo_matrix [0] [size - 1] = 1;
+    return 1;
+  }
+
+  memo_matrix [0] [size - 1] = size;
+  for ( suffix_start = 1  ;  suffix_start < size  ;  ++ suffix_start )
+  {
+    if ( is_pal ( str, suffix_start, size - 1 ) )
+    {
+      memo_matrix [suffix_start] [size - 1] = 1;
+
+      top_down_strategy ( str, suffix_start, memo_matrix );
+
+      if ( memo_matrix [0] [size - 1] > memo_matrix [0] [suffix_start - 1] + 1 )
+      {
+        memo_matrix [0] [size - 1] = memo_matrix [0] [suffix_start - 1] + 1;
+      }
+    }
+  }
+
+  return memo_matrix [0] [size - 1];
+}
+
+
 int main()
 {
   int n, test_num = 1;
@@ -134,7 +184,7 @@ int main()
 #endif
 
     printf( "Teste %d\n", test_num++ );
-    printf( "%d\n", run ( & botton_up_strategy, line, n, minima ) );
+    printf( "%d\n", run ( & top_down_strategy, line, n, minima ) );
 
 #if PRINTS_MEMO_MATRIX
   pp_mat ( line, n, minima );
