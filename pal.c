@@ -8,12 +8,19 @@
 
 #define DISCARDS_EXCEEDING_INPUT 0
 #define PRINTS_MEMO_MATRIX 0
+#define LINEAR_SPACE 1
+
+#if LINEAR_SPACE
+  #define LINES 1
+#else
+  #define LINES N
+#endif
 
 // minima [x][y] memoizes the minimum for the substring beginning at x and
 // ending at y (both inclusive). Such requirement implies minima is upper
 // triangular - if the first index x is considered to be the row index and y
 // the column one:
-unsigned int minima[N][N] = {{0}};
+unsigned int minima[LINES][N] = {{0}};
 
 // type of possible minimization strategies
 typedef unsigned int ( *  minimization_algorithm  ) \
@@ -32,7 +39,11 @@ unsigned int run
   unsigned int i, j;
 
   // memoization matrix clean up
+#if !LINEAR_SPACE
   for ( i = 0 ; i < str_size ; ++ i )
+#else
+  i = 0;
+#endif
   {
     for ( j = 0 ; j < str_size ; ++ j )
     {
@@ -73,7 +84,11 @@ void pp_mat ( const char* str, size_t size, unsigned int mat[][N] )
   }
   puts ("");
 
+#if !LINEAR_SPACE
   for ( x = 0  ;  x < size  ;  ++ x )
+#else
+  x = 0;
+#endif
   {
     for ( y = 0  ;  y < size  ;  ++ y )
     {
@@ -140,7 +155,9 @@ unsigned int top_down_strategy (
   {
     if ( is_pal ( str, suffix_start, size - 1 ) )
     {
+#if !LINEAR_SPACE
       memo_matrix [suffix_start] [size - 1] = 1;
+#endif
 
       top_down_strategy ( str, suffix_start, memo_matrix );
 
