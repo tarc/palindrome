@@ -6,7 +6,6 @@
 #define N 2000
 #define log_N 4
 
-#define DISCARDS_EXCEEDING_INPUT 0
 #define PRINTS_MEMO_MATRIX 0
 #define LINEAR_SPACE 1
 
@@ -98,6 +97,7 @@ void pp_mat ( const char* str, size_t size, unsigned int mat[][N] )
   }
 }
 
+#if !LINEAR_SPACE
 // Bottom-up implementation
 unsigned int botton_up_strategy( const char* str, size_t size, unsigned int memo_matrix[][N] )
 {
@@ -130,6 +130,7 @@ unsigned int botton_up_strategy( const char* str, size_t size, unsigned int memo
 
   return memo_matrix [0] [size - 1];
 }
+#endif
 
 // Top-down implementation
 unsigned int top_down_strategy (
@@ -176,29 +177,15 @@ int main()
 {
   int n, test_num = 1;
   char line[N + 2];
-#if DISCARDS_EXCEEDING_INPUT
-  int overflow = 0, key;
-#endif
 
   fgets( line, N + 2, stdin );
 
   // limits n to N
   while ((  n =  atoi(line) >= N  ?  N  :  atoi(line)  ))
   {
-#if DISCARDS_EXCEEDING_INPUT
-    if ( line[strlen(line) - 1] != '\n' )
-    {
-      overflow = 1;
-    }
-#endif
 
     fgets( line, N + 2, stdin );
 
-#if DISCARDS_EXCEEDING_INPUT
-    while ( overflow && ( key = getc ( stdin ) ) != EOF && key != '\n' );
-    
-    overflow = 0;
-#endif
 
     printf( "Teste %d\n", test_num++ );
     printf( "%d\n", run ( & top_down_strategy, line, n, minima ) );
